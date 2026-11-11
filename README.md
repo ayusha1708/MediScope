@@ -35,3 +35,7 @@ python -m pip install -r ai-service/requirements.txt
 From this folder, use `git status` to see what changed. After reviewing changes, use `git add <file-or-folder>` and `git commit -m "Describe the change"` to save a local checkpoint. Never commit passwords, API keys, private documents, or local database files.
 
 A GitHub remote has not been connected yet. We will connect this local repository to a private GitHub repository once the initial files and repository visibility are confirmed.
+## Document review policy
+
+The initial approval checklist and agreed scope are in [docs/document-approval-policy.md](docs/document-approval-policy.md). Only documents marked APPROVED by an administrator may be indexed. The policy requires both free online access and reuse permission for the project's processing.
+
