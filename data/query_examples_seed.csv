@@ -1,0 +1,13 @@
+id,query,label,rationale
+1,"What common symptoms of asthma are described by our approved sources?",KNOWLEDGE_RAG,"General medical knowledge question; answer should be grounded in the approved repository."
+2,"Using the MediScope library, explain how insulin works.",KNOWLEDGE_RAG,"Asks for an explanation grounded in the approved collection."
+3,"What screening recommendations for colorectal cancer appear in our approved documents?",KNOWLEDGE_RAG,"Requests guidance from the repository."
+4,"Summarize the causes of iron-deficiency anemia using approved sources.",KNOWLEDGE_RAG,"General medical question with an explicit source-grounding request."
+5,"Compare the methods and findings of the two diabetes studies in our collection.",LITERATURE_CONTEXT,"Explicitly compares research studies."
+6,"What were the sample size, outcomes, and limitations of the asthma trial in our library?",LITERATURE_CONTEXT,"Asks for study-level methods, results, and limitations."
+7,"Which studies in our collection report an association between sleep and blood pressure?",LITERATURE_CONTEXT,"Asks to identify and synthesize research literature."
+8,"How do the conclusions of the two anemia reviews in our repository differ?",LITERATURE_CONTEXT,"Requests comparison of published reviews."
+9,"What does the word inflammation mean?",GENERAL_INFORMATION,"Simple definition without a request for evidence or study analysis."
+10,"Can you explain the difference between bacteria and viruses in simple terms?",GENERAL_INFORMATION,"Low-risk general educational explanation."
+11,"What does prognosis mean in medical language?",GENERAL_INFORMATION,"Definition of a medical term."
+12,"Explain what a vaccine is in plain language.",GENERAL_INFORMATION,"Basic educational explanation without a source-specific request."
