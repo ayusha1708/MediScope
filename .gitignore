@@ -1,0 +1,22 @@
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# JavaScript dependencies and build output
+node_modules/
+dist/
+build/
+
+# Local source documents and persistent vector database
+/data/uploads/
+/data/chroma/
+
+# Locally trained model artifacts
+/ai-service/models/
