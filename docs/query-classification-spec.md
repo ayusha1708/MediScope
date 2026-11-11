@@ -1,7 +1,7 @@
-# Query classification specification (draft)
+# Query classification specification
 
-**Status:** Draft for review  
-**Version:** 0.1  
+**Status:** Approved for initial implementation  
+**Version:** 1.0  
 **Purpose:** Route a user question to the right answer workflow; this is not a medical diagnosis model.
 
 ## What the classifier decides
@@ -32,26 +32,27 @@ A separate safety check runs before ordinary classification. A request for a per
 
 If a question is unclear or the classifier is uncertain, the system should ask a short clarifying question or use the safer evidence-retrieval path. It must not silently route an uncertain medical question to an unsupported answer. We will choose and evaluate any confidence threshold later; we will not invent one now.
 
-## Labeling rule for borderline questions
+## Operational tie-breakers for labels
 
-Use the user's requested *kind of answer* as the deciding clue:
+Use the kind of answer the user is asking for:
 
-- General medical explanation backed by the repository → `KNOWLEDGE_RAG`.
-- Explicit focus on published studies or comparisons → `LITERATURE_CONTEXT`.
-- Simple, low-risk definition/explanation without a request for repository evidence or study analysis → `GENERAL_INFORMATION`.
+- `LITERATURE_CONTEXT` only when the question explicitly asks about research papers, studies, trials, reviews, their methods/results/limitations, or comparison of published findings.
+- `KNOWLEDGE_RAG` for medical facts, causes, mechanisms, symptoms, classifications, or guidance that should be supported by the approved repository. Asking for a source, evidence, or the MediScope library does **not by itself** make a question literature-focused.
+- `GENERAL_INFORMATION` for a simple, low-risk definition or basic concept explanation without a request for research analysis or deeper evidence.
 
-For example, “Explain asthma using our approved sources” is `KNOWLEDGE_RAG`; “Compare the methods and results of two asthma trials” is `LITERATURE_CONTEXT`; “What does the word inflammation mean?” is `GENERAL_INFORMATION`.
+If the wording is ambiguous between general information and RAG, route to RAG so medical claims can be supported. A separate safety check still runs first for personal diagnosis, medication decisions/doses, and urgent symptoms.
 
-## Seed examples
+Examples: “What does inflammation mean?” → `GENERAL_INFORMATION`; “What causes anemia?” → `KNOWLEDGE_RAG`; “Explain anemia using approved sources” → `KNOWLEDGE_RAG`; “Compare the findings of two anemia trials” → `LITERATURE_CONTEXT`.
 
-`data/query_examples_seed.csv` contains four illustrative examples per label. It is a teaching/review seed only. It is **not enough to train or evaluate a model**, and no performance claim should be made from it. The examples should be reviewed and corrected before we expand the dataset.
+## Dataset and initial model comparison
 
-When we build the real dataset, each row will have one primary label assigned by a human. We will collect varied wording, remove duplicates and near-duplicates before splitting, and keep a separate held-out test set. We should not put private user health questions into the dataset without a clear consent and privacy plan.
+`data/query_train.csv` and `data/query_test.csv` contain the current balanced synthetic dataset. `data/query_examples_batch_1.csv` holds 30 examples approved by the project owner and included in training. `data/query_examples_seed.csv` is an earlier seed and is not merged. The v1 test set was inspected for error analysis and is now development data in `data/query_dev_v1.csv`; it is not a final test set.
 
-## Planned model experiment (later step)
+The first experiment compares TF-IDF with Logistic Regression, Multinomial Naive Bayes, and Linear SVM using topic-grouped cross-validation, then evaluates the selected model on the fresh v2 test set. Results are saved in `ai-service/reports/query_classifier_metrics.json`. Because the corpus is synthetic, these metrics do not estimate performance on real user questions.
 
-Once we have enough reviewed examples, we will use TF-IDF text features and compare Logistic Regression, Multinomial Naive Bayes, and Linear SVM as stated in the brief. We will select based on held-out precision, recall, F1-score, and confusion matrix—not training accuracy alone. If the dataset is too small or labels are unclear, we will improve the dataset before claiming a useful classifier.
+No real user health queries are included. Before claiming real-world performance, collect and label a separate natural-question set without personal health details and with appropriate consent.
 
-## Questions to review
+## Approval
 
-Please check that the three definitions match how you want MediScope to route questions. In particular, confirm that the default/general path stays limited to low-risk education and that personal or urgent medical questions go through the separate safety handling described above.
+The project owner approved the operational tie-breakers in Version 1.0: explicit study/paper/trial/review analysis routes to Literature Context; medical facts and evidence/source requests route to Knowledge RAG; simple definitions route to General Information.
+

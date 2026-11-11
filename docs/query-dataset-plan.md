@@ -1,6 +1,6 @@
 # Query-classifier dataset plan
 
-**Status:** Dataset v1.0 assembled — synthetic baseline  
+**Status:** Approved routing rules; dataset v1.1 synthetic baseline  
 **Task:** Route an educational question to `KNOWLEDGE_RAG`, `LITERATURE_CONTEXT`, or `GENERAL_INFORMATION`.
 
 ## Accuracy: what we can and cannot promise
@@ -35,18 +35,24 @@ These are practical project targets, not a guarantee that the model is accurate 
 
 ## Dataset v1.0 files
 
-- `data/query_train.csv`: 900 questions, balanced at 300 per route. It includes the 30 project-owner-approved examples and 870 original synthetic examples.
-- `data/query_test.csv`: 300 separate synthetic questions, balanced at 100 per route. It uses separate question templates and topic groups and has no exact query overlap with training. Keep it untouched while fitting or tuning models.
+- `data/query_train.csv`: 1,200 questions, balanced at 400 per route. It includes the original training rows and the inspected v1 test rows, now used as development data.
+- `data/query_dev_v1.csv`: the prior 300-row test set. Because we inspected its errors, it is now development data and is not a final test.
+- `data/query_test.csv`: a fresh 300-row holdout, balanced at 100 per route, with new topic groups and no exact query or topic-group overlap. Its question styles are represented in training so it measures generalization to new topics.
 - Both files include query ID, text, label, topic group, origin/review status, and a short label rationale.
 
 The 30 examples in `data/query_examples_batch_1.csv` were approved and merged into training. The earlier 12-row `data/query_examples_seed.csv` was not merged because it was an earlier draft and could introduce duplicates.
 
 ## Limits of this first dataset
 
-The remaining training examples and the complete test set are assistant-authored synthetic questions labeled from the approved rules. There are no real user queries or private medical details. This makes a balanced baseline that can be used to teach the model-comparison workflow, but its test score will measure performance on this synthetic writing style, not on real MediScope users. Before claiming real-world accuracy, we need a separately collected and human-labeled set of natural questions, with no personal health details and appropriate consent. Report the dataset as synthetic in academic work.
+Apart from the 30 examples approved by the project owner, the data is assistant-authored synthetic text labeled from the agreed rules. The v1 test is now development data. The v2 holdout tests new topics using question styles represented in training; it remains synthetic and does not estimate performance on real MediScope users. Before claiming real-world accuracy, collect a separate human-labeled set of natural questions without personal health details and with appropriate consent. Report the dataset as synthetic in academic work.
 
 ## Source notes
 
 - [Roberts et al., Resource Classification for Medical Questions](https://pmc.ncbi.nlm.nih.gov/articles/PMC5333297/) — resource-routing task and annotation challenges; the paper says its annotated corpora are available by request.
 - [MedQuAD official repository](https://github.com/abachaa/MedQuAD) — 47,457 medical QA pairs and a CC BY 4.0 notice; useful as a possible attributed source of question phrasing, but it does not supply MediScope route labels.
 
+
+
+## What v1 error review changed
+
+The v1 test had 84 errors: 50 simple definitions were sent to RAG, 23 RAG questions mentioning evidence/sources were sent to Literature, 10 RAG questions were sent to General Information, and 1 Literature question was sent to RAG. Those examples were moved to `query_dev_v1.csv` and added to training. The label guide now says that a source/evidence request alone does not mean Literature; Literature requires an explicit research-paper/study/trial/review focus. Ambiguous medical fact questions default to RAG.

@@ -1,0 +1,1 @@
+"""MediScope AI application package."""

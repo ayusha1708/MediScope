@@ -1,0 +1,222 @@
+{
+  "created_utc": "2026-11-11T22:01:10.398602+00:00",
+  "scikit_learn_version": "1.9.0",
+  "dataset_note": "Synthetic questions with held-out topic groups. Prompt styles are represented in training; results do not estimate real-user routing accuracy.",
+  "training_rows": 1200,
+  "training_class_counts": {
+    "KNOWLEDGE_RAG": 400,
+    "LITERATURE_CONTEXT": 400,
+    "GENERAL_INFORMATION": 400
+  },
+  "test_rows": 300,
+  "test_class_counts": {
+    "KNOWLEDGE_RAG": 100,
+    "LITERATURE_CONTEXT": 100,
+    "GENERAL_INFORMATION": 100
+  },
+  "cross_validation": {
+    "folds": 5,
+    "splitter": "StratifiedGroupKFold",
+    "selection_metric": "macro F1, with accuracy as tie-breaker",
+    "models": {
+      "Logistic Regression": {
+        "accuracy": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958333333333333,
+            0.9916666666666667,
+            1.0
+          ],
+          "mean": 0.9975000000000002,
+          "std": 0.0033333333333333214
+        },
+        "precision_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958847736625515,
+            0.991869918699187,
+            1.0
+          ],
+          "mean": 0.9975509384723477,
+          "std": 0.0032571090842993464
+        },
+        "recall_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958333333333332,
+            0.9916666666666667,
+            1.0
+          ],
+          "mean": 0.9974999999999999,
+          "std": 0.0033333333333333327
+        },
+        "f1_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958331705665585,
+            0.991665364379851,
+            1.0
+          ],
+          "mean": 0.9974997069892819,
+          "std": 0.003333805415762061
+        }
+      },
+      "Multinomial Naive Bayes": {
+        "accuracy": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958333333333333,
+            0.9958333333333333,
+            1.0
+          ],
+          "mean": 0.9983333333333334,
+          "std": 0.002041241452319308
+        },
+        "precision_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958847736625515,
+            0.9958847736625515,
+            1.0
+          ],
+          "mean": 0.9983539094650207,
+          "std": 0.0020160409405622776
+        },
+        "recall_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958333333333332,
+            0.9958333333333332,
+            1.0
+          ],
+          "mean": 0.9983333333333333,
+          "std": 0.002041241452319362
+        },
+        "f1_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            0.9958331705665585,
+            0.9958331705665585,
+            1.0
+          ],
+          "mean": 0.9983332682266234,
+          "std": 0.002041321191428393
+        }
+      },
+      "Linear SVM": {
+        "accuracy": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            1.0,
+            0.9875,
+            1.0
+          ],
+          "mean": 0.9974999999999999,
+          "std": 0.004999999999999982
+        },
+        "precision_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            1.0,
+            0.9879518072289156,
+            1.0
+          ],
+          "mean": 0.9975903614457831,
+          "std": 0.00481927710843375
+        },
+        "recall_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            1.0,
+            0.9874999999999999,
+            1.0
+          ],
+          "mean": 0.9974999999999999,
+          "std": 0.005000000000000026
+        },
+        "f1_macro": {
+          "fold_scores": [
+            1.0,
+            1.0,
+            1.0,
+            0.9874956039232542,
+            1.0
+          ],
+          "mean": 0.9974991207846508,
+          "std": 0.005001758430698322
+        }
+      }
+    }
+  },
+  "selected_model": "Multinomial Naive Bayes",
+  "held_out_test": {
+    "accuracy": 1.0,
+    "classification_report": {
+      "KNOWLEDGE_RAG": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 100.0
+      },
+      "LITERATURE_CONTEXT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 100.0
+      },
+      "GENERAL_INFORMATION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 100.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 300.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 300.0
+      }
+    },
+    "confusion_matrix_labels": [
+      "KNOWLEDGE_RAG",
+      "LITERATURE_CONTEXT",
+      "GENERAL_INFORMATION"
+    ],
+    "confusion_matrix_rows_true_columns_predicted": [
+      [
+        100,
+        0,
+        0
+      ],
+      [
+        0,
+        100,
+        0
+      ],
+      [
+        0,
+        0,
+        100
+      ]
+    ]
+  },
+  "saved_model": "ai-service\\models\\query_classifier.joblib"
+}

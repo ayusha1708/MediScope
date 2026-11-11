@@ -1,0 +1,85 @@
+﻿query_id,query,actual_label,predicted_label
+TE-KR-01-02,Summarize evidence about nerve signal transmission from approved sources.,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-01-05,What does clinical reference material say about nerve signal transmission?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-01-08,Where in our collection can I learn about nerve signal transmission?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-01-10,Can you explain the medical background of nerve signal transmission?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-02-05,What does clinical reference material say about gland hormone release?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-02-08,Where in our collection can I learn about gland hormone release?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-02-10,Can you explain the medical background of gland hormone release?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-03-05,What does clinical reference material say about oxygen transport in blood?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-03-08,Where in our collection can I learn about oxygen transport in blood?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-03-10,Can you explain the medical background of oxygen transport in blood?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-04-05,What does clinical reference material say about fluid balance in the body?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-04-08,Where in our collection can I learn about fluid balance in the body?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-05-02,Summarize evidence about stomach acid production from approved sources.,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-05-05,What does clinical reference material say about stomach acid production?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-05-08,Where in our collection can I learn about stomach acid production?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-05-10,Can you explain the medical background of stomach acid production?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-06-02,Summarize evidence about cartilage structure from approved sources.,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-06-05,What does clinical reference material say about cartilage structure?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-06-08,Where in our collection can I learn about cartilage structure?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-06-10,Can you explain the medical background of cartilage structure?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-07-05,What does clinical reference material say about natural killer cell function?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-07-08,Where in our collection can I learn about natural killer cell function?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-08-05,What does clinical reference material say about liver bile production?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-08-08,Where in our collection can I learn about liver bile production?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-08-10,Can you explain the medical background of liver bile production?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-09-02,Summarize evidence about retinal light detection from approved sources.,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-09-05,What does clinical reference material say about retinal light detection?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-09-08,Where in our collection can I learn about retinal light detection?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-09-10,Can you explain the medical background of retinal light detection?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-KR-10-02,Summarize evidence about skeletal muscle contraction from approved sources.,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-10-05,What does clinical reference material say about skeletal muscle contraction?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-10-08,Where in our collection can I learn about skeletal muscle contraction?,KNOWLEDGE_RAG,LITERATURE_CONTEXT
+TE-KR-10-10,Can you explain the medical background of skeletal muscle contraction?,KNOWLEDGE_RAG,GENERAL_INFORMATION
+TE-LIT-02-09,How has the scientific literature evaluated school-based obesity prevention?,LITERATURE_CONTEXT,KNOWLEDGE_RAG
+TE-GEN-001-2,How would you briefly describe mitochondrion?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-002-2,How would you briefly describe ribosome?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-003-2,How would you briefly describe stem cell?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-004-2,How would you briefly describe collagen?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-005-2,How would you briefly describe melatonin?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-006-2,How would you briefly describe histamine?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-007-2,How would you briefly describe cerebrospinal fluid?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-008-2,How would you briefly describe synovial fluid?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-009-2,How would you briefly describe cornea?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-010-2,How would you briefly describe optic nerve?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-011-2,How would you briefly describe tonsil?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-012-2,How would you briefly describe larynx?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-013-2,How would you briefly describe esophagus?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-014-2,How would you briefly describe duodenum?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-015-2,How would you briefly describe colon?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-016-2,How would you briefly describe rectum?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-017-2,How would you briefly describe gallstone?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-018-2,How would you briefly describe kidney stone?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-019-2,How would you briefly describe marrow?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-020-2,How would you briefly describe femur?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-021-2,How would you briefly describe patella?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-022-2,How would you briefly describe sternum?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-023-2,How would you briefly describe aorta?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-024-2,How would you briefly describe vena cava?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-025-2,How would you briefly describe bronchus?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-026-2,How would you briefly describe alveolus?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-027-2,How would you briefly describe pleura?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-028-2,How would you briefly describe pericardium?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-029-2,How would you briefly describe heart valve?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-030-2,How would you briefly describe atrium?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-031-2,How would you briefly describe ventricle?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-032-2,How would you briefly describe cerebellum?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-033-2,How would you briefly describe hippocampus?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-034-2,How would you briefly describe cortex?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-035-2,How would you briefly describe myelin?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-036-2,How would you briefly describe reflex?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-037-2,How would you briefly describe saliva?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-038-2,How would you briefly describe bile?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-039-2,How would you briefly describe urine?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-040-2,How would you briefly describe stool?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-041-2,How would you briefly describe mucus?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-042-2,How would you briefly describe sweat?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-043-2,How would you briefly describe tear?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-044-2,How would you briefly describe vitamin?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-045-2,How would you briefly describe mineral?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-046-2,How would you briefly describe amino acid?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-047-2,How would you briefly describe fatty acid?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-048-2,How would you briefly describe carbohydrate?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-049-2,How would you briefly describe fiber?,GENERAL_INFORMATION,KNOWLEDGE_RAG
+TE-GEN-050-2,How would you briefly describe fibroblast?,GENERAL_INFORMATION,KNOWLEDGE_RAG

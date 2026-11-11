@@ -1,0 +1,1 @@
+"""Query classification component."""
