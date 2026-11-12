@@ -5,13 +5,42 @@ from pathlib import Path
 from typing import Any
 
 import joblib
-from scipy.sparse import save_npz
+from scipy.sparse import load_npz, save_npz
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from app.retrieval.tfidf import TfidfIndex
 
 
 class IndexStorageError(ValueError):
     """Raised when a local retrieval index cannot be saved safely."""
+
+
+def load_tfidf_index(index_dir: str | Path):
+    """Load the vectorizer, sparse matrix, and chunk metadata from disk."""
+    from app.retrieval.search import SearchIndex
+
+    index_path = Path(index_dir)
+    try:
+        vectorizer = joblib.load(index_path / "vectorizer.joblib")
+        vectors = load_npz(index_path / "vectors.npz")
+        payload = json.loads((index_path / "chunks.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError, KeyError) as error:
+        raise IndexStorageError(f"Could not load the local index: {error}") from error
+
+    if not isinstance(vectorizer, TfidfVectorizer):
+        raise IndexStorageError("Saved vectorizer has an unexpected format.")
+    chunks = payload.get("chunks")
+    if not isinstance(chunks, list) or vectors.shape[0] != len(chunks):
+        raise IndexStorageError("Saved vectors and chunk metadata do not match.")
+    document = payload.get("document", {})
+    if not isinstance(document, dict):
+        raise IndexStorageError("Saved document metadata has an unexpected format.")
+    return SearchIndex(
+        vectorizer=vectorizer,
+        vectors=vectors,
+        chunks=chunks,
+        document=document,
+    )
 
 
 def save_tfidf_index(

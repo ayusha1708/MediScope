@@ -67,3 +67,39 @@ python index_document.py "C:\path\to\document.pdf" "..\data\document_reviews\doc
 ```
 
 The index is saved under `data/tfidf_index/<document-id>/`. It contains `vectorizer.joblib` (the fitted vocabulary and term weights), `vectors.npz` (the sparse chunk vectors), and `chunks.json` (chunk text, page numbers, and citation metadata). This generated index is local and ignored by Git. Add all approved documents to one shared TF-IDF vocabulary in a later corpus-indexing step before comparing retrieval scores across documents.
+
+## Search for relevant passages
+
+After saving an index, search it by document ID and question:
+
+```powershell
+python search_document.py "document-id" "What symptoms does the article describe?"
+```
+
+The command prints the three closest passages, their source page numbers, and TF-IDF cosine similarity scores from 0 to 1. The scores measure word overlap, not medical certainty. This command retrieves evidence only.
+
+## Generate an answer with local Ollama
+
+Install Ollama for Windows, then download a local model once:
+
+```powershell
+ollama pull qwen3:4b
+ollama list
+```
+
+Ollama runs locally at `http://localhost:11434`. MediScope calls its `/api/chat` endpoint using Python's standard library, so no extra Python package or API key is required. Keep Ollama running while asking questions. The model name and local address can be configured in the current PowerShell session:
+
+```powershell
+$env:OLLAMA_MODEL = "qwen3:4b"
+$env:OLLAMA_BASE_URL = "http://localhost:11434"
+```
+
+From this `ai-service` folder, ask a question using the approved document's ID:
+
+```powershell
+python ask_document.py "PMC12560063" "What does the article say about medical education?"
+```
+
+The command shows all three closest references with their document title, page, passage ID, similarity score, source, and a short excerpt. It then asks Ollama to combine relevant information into a plain-language answer that is as long as needed to fully answer the question, without padding or repetition. The answer cites references as `[R1]`, `[R2]`, or `[R3]`; MediScope maps each marker to the actual retrieved passage. It will not force an irrelevant passage into the answer. If evidence is insufficient, no passage matches, Ollama returns an invalid citation, or the service is unavailable, the command shows a safe fallback while keeping the references visible. Scores measure word overlap, not answer confidence. This grounding reduces unsupported answers but cannot guarantee the model is always correct; verify the cited passage in the source.
+
+No API keys are used for local Ollama. If configuration is needed again in a new PowerShell window, set the two environment variables there too. Never put credentials in frontend code or commit them to Git.
