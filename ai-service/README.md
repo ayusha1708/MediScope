@@ -39,3 +39,13 @@ The approval gate checks that the saved review decision is `APPROVED` and that t
 ```powershell
 python check_document_approval.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
 ```
+
+## Preview text chunks
+
+After approval, the chunking command checks the approval gate, extracts text, and splits it into overlapping passages. The initial defaults are 250 words per passage and 40 shared words between neighboring passages; these are starting values to evaluate later, not a claim that they are optimal. Chunks stay in memory and are not saved or embedded.
+
+```powershell
+python chunk_document.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
+```
+
+You can change the starting settings with `--chunk-size-words` and `--overlap-words`.
