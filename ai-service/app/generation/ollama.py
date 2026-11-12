@@ -144,3 +144,55 @@ def generate_grounded_answer(
         ) from error
 
     return GroundedAnswer(" ".join(rendered_claims), True)
+
+
+def generate_general_answer(
+    question: str,
+    *,
+    model: str | None = None,
+    base_url: str | None = None,
+    timeout_seconds: int = 180,
+) -> str:
+    """Generate a brief, clearly unreferenced educational explanation."""
+    model_name = model or os.getenv("OLLAMA_MODEL", "qwen3:4b")
+    api_root = (base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/")
+    system_prompt = (
+        "Give a clear, brief, low-risk educational explanation for the general public. "
+        "Do not diagnose a person, interpret their symptoms, recommend treatment or "
+        "medication, suggest a dosage, or claim this answer is sourced from MediScope "
+        "documents. Do not invent citations. If the question asks for personal medical "
+        "advice, answer with a short boundary message instead. Return JSON with one "
+        "string field named answer."
+    )
+    request_body = json.dumps(
+        {
+            "model": model_name,
+            "stream": False,
+            "format": "json",
+            "think": False,
+            "options": {"temperature": 0},
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": question},
+            ],
+        }
+    ).encode("utf-8")
+    request = Request(
+        f"{api_root}/api/chat",
+        data=request_body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urlopen(request, timeout=timeout_seconds) as response:
+            api_response = json.loads(response.read().decode("utf-8"))
+        answer = json.loads(api_response["message"]["content"]).get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise ValueError("Ollama returned an empty answer.")
+    except (HTTPError, URLError, TimeoutError, OSError, KeyError, TypeError, ValueError) as error:
+        raise OllamaGenerationError(
+            "Could not get a usable general-information response from local Ollama."
+        ) from error
+
+    return answer.strip()

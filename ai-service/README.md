@@ -103,3 +103,16 @@ python ask_document.py "PMC12560063" "What does the article say about medical ed
 The command shows all three closest references with their document title, page, passage ID, similarity score, source, and a short excerpt. It then asks Ollama to combine relevant information into a plain-language answer that is as long as needed to fully answer the question, without padding or repetition. The answer cites references as `[R1]`, `[R2]`, or `[R3]`; MediScope maps each marker to the actual retrieved passage. It will not force an irrelevant passage into the answer. If evidence is insufficient, no passage matches, Ollama returns an invalid citation, or the service is unavailable, the command shows a safe fallback while keeping the references visible. Scores measure word overlap, not answer confidence. This grounding reduces unsupported answers but cannot guarantee the model is always correct; verify the cited passage in the source.
 
 No API keys are used for local Ollama. If configuration is needed again in a new PowerShell window, set the two environment variables there too. Never put credentials in frontend code or commit them to Git.
+
+## Route questions with the classifier
+
+The routing command first applies a small rule-based safety screen, then uses the saved query-classifier model. A `GENERAL_INFORMATION` question gets a clearly labeled general educational response without document citations. `KNOWLEDGE_RAG` and `LITERATURE_CONTEXT` use approved indexed passages and the grounded-answer flow. For those routes, specify the document index to search:
+
+```powershell
+python answer_question.py "What are the three key areas to consider when evaluating OERs?" --document-id "PMC12560063"
+python answer_question.py "What does inflammation mean?"
+```
+
+If the classifier model is missing, create it with `python train_query_classifier.py`.
+
+The current collection has one document, so literature questions cannot yet compare multiple papers. The safety screen catches obvious personal-diagnosis, medication-decision, and urgent-symptom wording; it is a first-pass project safeguard, not a clinical triage system. The classifier was trained on synthetic data, so review routing results as the project grows.
