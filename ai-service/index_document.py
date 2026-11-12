@@ -63,6 +63,10 @@ def main() -> None:
                 "indexed_at": datetime.now().astimezone().isoformat(timespec="seconds"),
                 "chunk_size_words": args.chunk_size_words,
                 "overlap_words": args.overlap_words,
+                "text_preprocessing": (
+                    "NFC Unicode normalization, soft-hyphen removal, control-character "
+                    "cleanup, and whitespace normalization; page boundaries preserved"
+                ),
             },
         )
     except (

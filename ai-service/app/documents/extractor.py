@@ -9,6 +9,7 @@ from app.documents.validation import (
     DocumentValidationError,
     validate_document,
 )
+from app.documents.preprocessor import clean_extracted_text
 
 
 class DocumentProcessingError(ValueError):
@@ -39,7 +40,7 @@ def extract_document(file_path: str | Path) -> ExtractedDocument:
     validated = validate_document(file_path)
 
     if validated.file_type == "txt":
-        text = validated.path.read_text(encoding="utf-8-sig").strip()
+        text = clean_extracted_text(validated.path.read_text(encoding="utf-8-sig"))
         page_count = None
         pages = (ExtractedPage(page_number=None, text=text),)
     else:
@@ -53,7 +54,7 @@ def extract_document(file_path: str | Path) -> ExtractedDocument:
                 pages = tuple(
                     ExtractedPage(
                         page_number=page_number,
-                        text=page.get_text("text", sort=True).strip(),
+                        text=clean_extracted_text(page.get_text("text", sort=True)),
                     )
                     for page_number, page in enumerate(document, start=1)
                 )

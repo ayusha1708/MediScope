@@ -5,6 +5,7 @@ from typing import Any
 
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 class RetrievalError(ValueError):
@@ -39,7 +40,7 @@ def find_relevant_passages(
         raise RetrievalError("The result limit must be at least 1.")
 
     question_vector = index.vectorizer.transform([question])
-    scores = (index.vectors @ question_vector.T).toarray().ravel()
+    scores = cosine_similarity(question_vector, index.vectors).ravel()
     ranked_indexes = scores.argsort()[::-1][:limit]
     return [
         SearchResult(chunk=index.chunks[int(position)], score=float(scores[position]))

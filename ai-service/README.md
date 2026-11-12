@@ -18,7 +18,7 @@ python process_document.py "C:\path\to\document.pdf"
 python process_document.py "C:\path\to\document.txt"
 ```
 
-The first document-processing step supports PDF and UTF-8 TXT files up to 25 MB. It checks the file and extracts selectable text. Scanned/image-only PDFs are reported as not extractable; OCR is not included. The command reports a character count and file hash, but does not save the extracted text, create embeddings, or add anything to ChromaDB.
+The first document-processing step supports PDF and UTF-8 TXT files up to 25 MB. It checks the file and extracts selectable text page by page. A conservative preprocessing step normalizes Unicode and whitespace and removes soft hyphens/control characters; it does not strip headers, references, or medical terms. Scanned/image-only PDFs are reported as not extractable; OCR is not included. The command reports a character count and file hash, but does not save the extracted text or create an index.
 
 Only process source files after their free-access and reuse terms have been reviewed under `docs/document-approval-policy.md`.
 
@@ -76,7 +76,7 @@ After saving an index, search it by document ID and question:
 python search_document.py "document-id" "What symptoms does the article describe?"
 ```
 
-The command prints the three closest passages, their source page numbers, and TF-IDF cosine similarity scores from 0 to 1. The scores measure word overlap, not medical certainty. This command retrieves evidence only.
+The command prints the three closest passages, their source page numbers, and TF-IDF cosine similarity scores from 0 to 1. It transforms the question with the same saved vectorizer used for the passage vectors, then ranks by cosine similarity. Scores measure word overlap, not medical certainty. This command retrieves evidence only.
 
 ## Generate an answer with local Ollama
 
