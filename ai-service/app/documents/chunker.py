@@ -9,9 +9,10 @@ class ChunkingError(ValueError):
 
 @dataclass(frozen=True)
 class TextChunk:
-    """One passage, with zero-based word offsets into the extracted text."""
+    """One passage with its source page and zero-based page-local word offsets."""
 
     index: int
+    page_number: int | None
     start_word: int
     end_word: int
     text: str
@@ -20,12 +21,18 @@ class TextChunk:
 def chunk_text(
     text: str,
     *,
+    page_number: int | None = None,
+    first_chunk_index: int = 0,
     chunk_size_words: int = 250,
     overlap_words: int = 40,
 ) -> list[TextChunk]:
-    """Create word-count chunks with overlap, without saving or indexing them."""
-    if not isinstance(text, str) or not text.strip():
-        raise ChunkingError("Text must contain at least one non-whitespace character.")
+    """Chunk one page of text; chunks never cross page boundaries."""
+    if not isinstance(text, str):
+        raise ChunkingError("Text must be a string.")
+    if page_number is not None and page_number < 1:
+        raise ChunkingError("page_number must be 1 or greater, or None for TXT.")
+    if first_chunk_index < 0:
+        raise ChunkingError("first_chunk_index cannot be negative.")
     if chunk_size_words < 1:
         raise ChunkingError("chunk_size_words must be at least 1.")
     if overlap_words < 0:
@@ -34,14 +41,18 @@ def chunk_text(
         raise ChunkingError("overlap_words must be smaller than chunk_size_words.")
 
     words = text.split()
+    if not words:
+        return []
+
     chunks: list[TextChunk] = []
     step = chunk_size_words - overlap_words
 
-    for index, start in enumerate(range(0, len(words), step)):
+    for local_index, start in enumerate(range(0, len(words), step)):
         end = min(start + chunk_size_words, len(words))
         chunks.append(
             TextChunk(
-                index=index,
+                index=first_chunk_index + local_index,
+                page_number=page_number,
                 start_word=start,
                 end_word=end,
                 text=" ".join(words[start:end]),

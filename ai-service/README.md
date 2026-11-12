@@ -42,10 +42,28 @@ python check_document_approval.py "C:\path\to\document.pdf" "..\data\document_re
 
 ## Preview text chunks
 
-After approval, the chunking command checks the approval gate, extracts text, and splits it into overlapping passages. The initial defaults are 250 words per passage and 40 shared words between neighboring passages; these are starting values to evaluate later, not a claim that they are optimal. Chunks stay in memory and are not saved or embedded.
+After approval, the chunking command checks the approval gate, extracts text page by page, and splits each page into overlapping passages. Each PDF passage keeps its source page number; TXT passages have no page number. The initial defaults are 250 words per passage and 40 shared words between neighboring passages on the same page; these are starting values to evaluate later, not a claim that they are optimal. Chunks stay in memory and are not saved or embedded.
 
 ```powershell
 python chunk_document.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
 ```
 
 You can change the starting settings with `--chunk-size-words` and `--overlap-words`.
+
+## Create local TF-IDF vectors
+
+The vectorization step uses scikit-learn, which is already in `requirements.txt`. It builds a vocabulary from approved page-aware chunks and gives each chunk a sparse vector of term weights. A search query must later use the same fitted vocabulary and weights. TF-IDF matches terms and short phrases; it is not a neural embedding model and will not understand synonyms as well. It creates the vectors locally and does not save them yet.
+
+```powershell
+python vectorize_document.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
+```
+
+## Save the local index
+
+After reviewing the in-memory vector counts, build the persistent local index:
+
+```powershell
+python index_document.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
+```
+
+The index is saved under `data/tfidf_index/<document-id>/`. It contains `vectorizer.joblib` (the fitted vocabulary and term weights), `vectors.npz` (the sparse chunk vectors), and `chunks.json` (chunk text, page numbers, and citation metadata). This generated index is local and ignored by Git. Add all approved documents to one shared TF-IDF vocabulary in a later corpus-indexing step before comparing retrieval scores across documents.

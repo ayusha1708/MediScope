@@ -25,11 +25,16 @@ def main() -> None:
             raise ApprovalGateError(
                 "The file changed after approval verification. Review this exact file again."
             )
-        chunks = chunk_text(
-            extracted.text,
-            chunk_size_words=args.chunk_size_words,
-            overlap_words=args.overlap_words,
-        )
+        chunks = []
+        for page in extracted.pages:
+            page_chunks = chunk_text(
+                page.text,
+                page_number=page.page_number,
+                first_chunk_index=len(chunks),
+                chunk_size_words=args.chunk_size_words,
+                overlap_words=args.overlap_words,
+            )
+            chunks.extend(page_chunks)
     except (
         ApprovalGateError,
         ChunkingError,
@@ -41,6 +46,8 @@ def main() -> None:
     print("Approval gate passed; text chunking completed in memory.")
     print(f"File: {extracted.filename}")
     print(f"Chunks: {len(chunks)}")
+    if extracted.file_type == "pdf":
+        print(f"Source pages retained: {extracted.page_count}")
     print(
         f"Settings: {args.chunk_size_words} words per chunk, "
         f"{args.overlap_words} words of overlap"

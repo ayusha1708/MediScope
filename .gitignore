@@ -18,6 +18,7 @@ build/
 /data/uploads/
 /data/chroma/
 /data/document_reviews/
+/data/tfidf_index/
 
 # Locally trained model artifacts
 /ai-service/models/

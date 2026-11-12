@@ -16,6 +16,14 @@ class DocumentProcessingError(ValueError):
 
 
 @dataclass(frozen=True)
+class ExtractedPage:
+    """Text from one PDF page; TXT documents use no page number."""
+
+    page_number: int | None
+    text: str
+
+
+@dataclass(frozen=True)
 class ExtractedDocument:
     filename: str
     file_type: str
@@ -23,6 +31,7 @@ class ExtractedDocument:
     sha256: str
     page_count: int | None
     text: str
+    pages: tuple[ExtractedPage, ...]
 
 
 def extract_document(file_path: str | Path) -> ExtractedDocument:
@@ -32,6 +41,7 @@ def extract_document(file_path: str | Path) -> ExtractedDocument:
     if validated.file_type == "txt":
         text = validated.path.read_text(encoding="utf-8-sig").strip()
         page_count = None
+        pages = (ExtractedPage(page_number=None, text=text),)
     else:
         try:
             with pymupdf.open(validated.path) as document:
@@ -40,8 +50,14 @@ def extract_document(file_path: str | Path) -> ExtractedDocument:
                 if document.needs_pass:
                     raise DocumentProcessingError("Password-protected PDFs are not supported.")
                 page_count = document.page_count
-                page_text = [page.get_text("text", sort=True).strip() for page in document]
-                text = "\n\n".join(part for part in page_text if part)
+                pages = tuple(
+                    ExtractedPage(
+                        page_number=page_number,
+                        text=page.get_text("text", sort=True).strip(),
+                    )
+                    for page_number, page in enumerate(document, start=1)
+                )
+                text = "\n\n".join(page.text for page in pages if page.text)
         except DocumentProcessingError:
             raise
         except Exception as error:
@@ -61,4 +77,5 @@ def extract_document(file_path: str | Path) -> ExtractedDocument:
         sha256=validated.sha256,
         page_count=page_count,
         text=text,
+        pages=pages,
     )
