@@ -1,0 +1,32 @@
+{
+  "document": {
+    "document_id": "replace-with-a-unique-id",
+    "version": "1",
+    "title": "",
+    "authors_or_organization": "",
+    "publication_date": "",
+    "publisher_or_journal": "",
+    "document_type": "",
+    "source_locator": "",
+    "full_text_url": "",
+    "full_text_access_checked_on": "",
+    "license_or_permission": "",
+    "permission_evidence_url": "",
+    "permission_conditions": "",
+    "scope_reason": "",
+    "file_sha256": ""
+  },
+  "reviewer_id": "",
+  "reviewed_at": "YYYY-MM-DD",
+  "decision": "PENDING_ADMIN_REVIEW",
+  "decision_reason": "",
+  "checks": {
+    "free_online_access": {"status": "NEEDS_INFORMATION", "note": ""},
+    "reuse_permission": {"status": "NEEDS_INFORMATION", "note": ""},
+    "traceable_identity": {"status": "NEEDS_INFORMATION", "note": ""},
+    "scope_and_document_type": {"status": "NEEDS_INFORMATION", "note": ""},
+    "file_usability_and_privacy": {"status": "NEEDS_INFORMATION", "note": ""},
+    "publication_status": {"status": "NEEDS_INFORMATION", "note": ""}
+  },
+  "ai_screening_report": null
+}

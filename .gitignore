@@ -17,6 +17,7 @@ build/
 # Local source documents and persistent vector database
 /data/uploads/
 /data/chroma/
+/data/document_reviews/
 
 # Locally trained model artifacts
 /ai-service/models/
