@@ -106,9 +106,10 @@ No API keys are used for local Ollama. If configuration is needed again in a new
 
 ## Route questions with the classifier
 
-The routing command first applies a small rule-based safety screen, then uses the saved query-classifier model. A `GENERAL_INFORMATION` question gets a clearly labeled general educational response without document citations. `KNOWLEDGE_RAG` and `LITERATURE_CONTEXT` use approved indexed passages and the grounded-answer flow. For those routes, specify the document index to search:
+The routing command applies the safety screen, then uses the saved query-classifier model. A `GENERAL_INFORMATION` question gets a clearly labeled educational response without document citations. `KNOWLEDGE_RAG` and `LITERATURE_CONTEXT` search the shared MongoDB TF-IDF index and use grounded Ollama answers. MongoDB retrieval searches all indexed approved documents by default; use `--document-id` to restrict it to one document.
 
 ```powershell
+python answer_question.py "What are the three key areas to consider when evaluating OERs?"
 python answer_question.py "What are the three key areas to consider when evaluating OERs?" --document-id "PMC12560063"
 python answer_question.py "What does inflammation mean?"
 ```
@@ -116,3 +117,68 @@ python answer_question.py "What does inflammation mean?"
 If the classifier model is missing, create it with `python train_query_classifier.py`.
 
 The current collection has one document, so literature questions cannot yet compare multiple papers. The safety screen catches obvious personal-diagnosis, medication-decision, and urgent-symptom wording; it is a first-pass project safeguard, not a clinical triage system. The classifier was trained on synthetic data, so review routing results as the project grows.
+
+## Connect the shared MongoDB Atlas database
+
+Copy `.env.example` to `.env`, then replace the URI placeholders with the MongoDB Atlas connection URI. Keep `.env` local; it is ignored by Git. Never paste the URI into source code, frontend files, GitHub, or chat. Create a database user with access to `medscope` and allow the developer computers' IP addresses in Atlas Network Access.
+
+```powershell
+Copy-Item .env.example .env
+python -m pip install -r requirements.txt
+python check_mongodb_connection.py
+```
+
+The connection check only pings Atlas and reads collection/index counts. It does not create or modify application data. The original PDFs remain local for now; approved metadata, passages, and the shared TF-IDF index are stored using the separate steps below.
+
+## Store one approved document's metadata in MongoDB
+
+After `python check_mongodb_connection.py` succeeds, store the approved catalog/review record for one file:
+
+```powershell
+python store_approved_document.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
+```
+
+The command rechecks the `APPROVED` decision and file SHA-256 before inserting into the `documents` collection. Each record keeps bibliographic metadata, file name/type/size/hash, and the admin review evidence. Its MongoDB ID is based on document ID and version, so repeating the same insert is safely rejected instead of overwriting the existing record. This step does not upload the PDF or store extracted text, chunks, or TF-IDF vectors; those are separate later steps.
+
+## Store page-aware passages in MongoDB
+
+After the approved document metadata is present in the `documents` collection, regenerate and store its passages:
+
+```powershell
+python store_document_chunks.py "C:\path\to\document.pdf" "..\data\document_reviews\document-id.json"
+```
+
+The command rechecks the approval and file hash, then writes one record per passage to `chunks`, including its passage ID, page number, text, and link to the document/version. It uses the existing 250-word/40-word-overlap defaults. Repeating the command is safe for the same source and settings: it fills missing passages without replacing existing ones. The parent document record is marked `CHUNKS_STORED`. This step does not store vectors; the next retrieval-storage step will address those.
+
+## Build the shared MongoDB TF-IDF index
+
+After storing approved metadata and passages, fit one TF-IDF vocabulary across all approved passages and persist the sparse vectors:
+
+```powershell
+python build_mongodb_tfidf_index.py
+```
+
+The command reads only passages linked to approved document records, fits the existing TF-IDF configuration (unigrams and bigrams), and saves each sparse vector on its passage record. The active fitted vocabulary, IDF weights, and settings are stored in `tfidf_indexes`. This allows future query code to vectorize questions with the exact corpus model. When additional documents are added, rerun this command to rebuild the corpus-wide index. This is sparse TF-IDF, so similarity will still be calculated by the Python service rather than MongoDB Atlas Vector Search.
+
+## Search the shared MongoDB index
+
+The MongoDB-backed search command uses the active saved vocabulary and IDF weights to vectorize the question, rebuilds the stored sparse matrix, and calculates cosine similarity in Python. It does not change the existing local search command.
+
+```powershell
+python search_mongodb.py "What criteria does the article use to judge OER quality?"
+python search_mongodb.py "What criteria does the article use to judge OER quality?" --document-id "PMC12560063"
+python search_mongodb.py "What are the three key areas to consider when evaluating OERs?" --full-text
+```
+
+The results include document title, page, passage ID, source URL, excerpt, and cosine score. Add `--full-text` to inspect each complete retrieved passage. The score is word overlap, not confidence. Use `ask_mongodb.py` below to send these MongoDB results through the grounded Ollama answer flow.
+
+## Ask using MongoDB retrieval and Ollama
+
+This command retrieves passages from Atlas, displays their references and scores, and asks the local Ollama model to combine only the supported evidence into a plain-language answer. Citations are mapped to the actual retrieved passage references. If the passages do not support an answer, or Ollama is unavailable, it uses the safe fallback.
+
+```powershell
+python ask_mongodb.py "What are the three key areas to consider when evaluating OERs?"
+```
+
+Optionally restrict search to a document with `--document-id "PMC12560063"`. The existing `ask_document.py` local-index command remains available and unchanged.
+
