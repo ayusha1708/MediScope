@@ -3,8 +3,10 @@
 import os
 import secrets
 import warnings
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from mediscope_api.routes.admin import router as admin_router
@@ -40,3 +42,7 @@ app.include_router(auth_router)
 app.include_router(documents_router)
 app.include_router(health_router)
 app.include_router(questions_router)
+
+# Keep frontend and API same-origin so the signed session cookie works without CORS setup.
+FRONTEND_ROOT = Path(__file__).resolve().parents[2] / "frontend"
+app.mount("/", StaticFiles(directory=FRONTEND_ROOT, html=True), name="frontend")

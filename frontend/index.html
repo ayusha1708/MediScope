@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f4">
+    <meta name="description" content="Ask questions grounded in reviewed medical documents.">
+    <title>MediScope — Medical knowledge, with sources</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="MediScope home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span class="brand-copy"><strong>MediScope</strong><small>Medical knowledge, with sources</small></span>
+        </a>
+        <div id="accountBar" class="account-bar hidden">
+          <span id="accountName" class="account-name"></span>
+          <button id="logoutButton" class="button button-quiet button-small" type="button">Sign out</button>
+        </div>
+      </header>
+
+      <main>
+        <section id="authScreen" class="auth-layout">
+          <div class="auth-intro">
+            <span class="eyebrow">A clearer way to explore medical sources</span>
+            <h1>Ask a question.<br><em>See where the answer comes from.</em></h1>
+            <p>MediScope searches reviewed documents and shows the passages behind each answer.</p>
+            <div class="trust-note"><span class="trust-icon">✓</span><span>Answers include source titles, page numbers, and similarity scores.</span></div>
+          </div>
+          <section class="auth-card card" aria-labelledby="authTitle">
+            <div class="auth-tabs" role="tablist" aria-label="Account access">
+              <button id="showLogin" class="auth-tab is-active" type="button" role="tab" aria-selected="true">Sign in</button>
+              <button id="showRegister" class="auth-tab" type="button" role="tab" aria-selected="false">Create account</button>
+            </div>
+            <div class="card-body">
+              <h2 id="authTitle">Welcome back</h2>
+              <p id="authDescription" class="muted">Sign in to ask a question or submit a source.</p>
+              <form id="authForm" class="form-stack">
+                <label id="displayNameField" class="field hidden">Your name
+                  <input id="displayName" name="display_name" autocomplete="name" maxlength="80" placeholder="Name shown if you reveal your identity">
+                </label>
+                <label class="field">Email address
+                  <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
+                </label>
+                <label class="field">Password
+                  <input id="password" name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="128" placeholder="At least 12 characters">
+                </label>
+                <button id="authSubmit" class="button button-primary button-wide" type="submit">Sign in</button>
+              </form>
+              <p id="authMessage" class="message hidden" role="status"></p>
+              <p class="form-footnote">Admin access is assigned separately; public registration creates a regular user account.</p>
+            </div>
+          </section>
+        </section>
+
+        <section id="workspace" class="hidden">
+          <div class="welcome-row">
+            <div><span class="eyebrow">Your workspace</span><h1 id="welcomeTitle">Good to see you</h1></div>
+            <span id="roleBadge" class="role-badge">USER</span>
+          </div>
+          <nav class="main-nav" aria-label="Main navigation">
+            <button class="nav-button is-active" data-page="askPage" type="button"><span class="nav-icon">⌕</span> Ask a question</button>
+            <button class="nav-button" data-page="uploadPage" type="button"><span class="nav-icon">↑</span> Submit a document</button>
+            <button class="nav-button" data-page="submissionsPage" type="button"><span class="nav-icon">▤</span> My submissions</button>
+            <button id="adminNav" class="nav-button hidden" data-page="adminPage" type="button"><span class="nav-icon">⚙</span> Admin review</button>
+          </nav>
+
+          <section id="askPage" class="page-section">
+            <div class="content-grid">
+              <div class="main-column">
+                <div class="section-heading"><div><span class="eyebrow">Ask MediScope</span><h2>What would you like to understand?</h2></div></div>
+                <form id="questionForm" class="question-form card">
+                  <label class="sr-only" for="questionInput">Your question</label>
+                  <textarea id="questionInput" name="question" rows="4" maxlength="4000" required placeholder="For example: What risk factors does the article discuss?"></textarea>
+                  <div class="form-row question-actions">
+                    <span class="muted small">Ask one clear question. MediScope searches all approved sources.</span>
+                    <button id="askButton" class="button button-primary" type="submit">Ask question <span aria-hidden="true">→</span></button>
+                  </div>
+                </form>
+                <div id="answerMessage" class="message hidden" role="status"></div>
+                <section id="answerPanel" class="answer-panel hidden" aria-live="polite">
+                  <div id="answerStatus" class="answer-status"></div>
+                  <article class="card answer-card">
+                    <div class="answer-heading"><div><span class="eyebrow">MediScope answer</span><span id="routeBadge" class="route-badge"></span></div></div>
+                    <div id="answerText" class="answer-text"></div>
+                  </article>
+                  <section class="references-section">
+                    <div class="section-heading compact"><div><span class="eyebrow">Evidence used</span><h3>Retrieved passages</h3></div><span class="muted small">Similarity scores are word overlap, not confidence.</span></div>
+                    <div id="referenceList" class="reference-list"></div>
+                  </section>
+                </section>
+              </div>
+              <aside class="side-note card">
+                <span class="note-symbol">i</span><h3>How answers work</h3>
+                <p>MediScope searches approved passages, then asks its language model to answer from those passages.</p>
+                <p>If the passages do not support an answer, it says so instead of guessing.</p>
+                <a href="/docs" target="_blank" rel="noreferrer">API documentation <span aria-hidden="true">↗</span></a>
+              </aside>
+            </div>
+          </section>
+
+          <section id="uploadPage" class="page-section hidden">
+            <div class="narrow-column">
+              <div class="section-heading"><div><span class="eyebrow">Contribute a source</span><h2>Submit a document for review</h2><p class="muted">An admin must review and approve it before it becomes searchable.</p></div></div>
+              <form id="uploadForm" class="card form-card form-stack">
+                <label class="field">Document file <span class="required">Required</span>
+                  <input id="uploadFile" name="file" type="file" accept=".pdf,.txt,application/pdf,text/plain" required>
+                  <small>PDF or UTF-8 TXT, up to 25 MB. The file needs extractable text.</small>
+                </label>
+                <label class="field">Document title <span class="required">Required</span>
+                  <input id="uploadTitle" name="title" type="text" required minlength="3" maxlength="300" placeholder="Title shown in the source">
+                </label>
+                <label class="field">Source or full-text URL
+                  <input id="sourceUrl" name="source_url" type="url" maxlength="2000" placeholder="https://...">
+                  <small>Add the official article or repository page when available.</small>
+                </label>
+                <label class="field">Why is this document relevant?
+                  <textarea id="scopeReason" name="scope_reason" rows="3" maxlength="2000" placeholder="A short reason to help the admin review it"></textarea>
+                </label>
+                <fieldset class="identity-choice">
+                  <legend>How should your identity appear to admins?</legend>
+                  <label class="choice-card"><input type="radio" name="reveal_identity" value="false" checked><span><strong>Stay anonymous</strong><small>Admins see “Anonymous.” Your account stays privately linked so you can track your submission.</small></span></label>
+                  <label class="choice-card"><input type="radio" name="reveal_identity" value="true"><span><strong>Reveal my identity</strong><small>Admins can see your name and email with this submission.</small></span></label>
+                </fieldset>
+                <div id="uploadMessage" class="message hidden" role="status"></div>
+                <div class="form-end"><span class="muted small">Uploading does not approve or index the document.</span><button id="uploadButton" class="button button-primary" type="submit">Submit for review <span aria-hidden="true">→</span></button></div>
+              </form>
+            </div>
+          </section>
+
+          <section id="submissionsPage" class="page-section hidden">
+            <div class="section-heading"><div><span class="eyebrow">Your documents</span><h2>Submission history</h2><p class="muted">Only you can see this list. Anonymous submissions still appear here for your account.</p></div><button id="refreshSubmissions" class="button button-secondary" type="button">Refresh list</button></div>
+            <div id="submissionsMessage" class="message hidden" role="status"></div>
+            <div id="mySubmissionList" class="submission-list"></div>
+          </section>
+
+          <section id="adminPage" class="page-section hidden">
+            <div class="section-heading"><div><span class="eyebrow">Admin workspace</span><h2>Document review</h2><p class="muted">Inspect the source and evidence before deciding whether to index it.</p></div><button id="refreshAdmin" class="button button-secondary" type="button">Refresh dashboard</button></div>
+            <div id="adminMessage" class="message hidden" role="status"></div>
+            <div id="dashboardCards" class="dashboard-cards"></div>
+            <div class="admin-layout">
+              <section class="card queue-card">
+                <div class="queue-heading"><div><h3>Submission queue</h3><p class="muted small">Choose a status, then open a submission.</p></div>
+                  <label class="sr-only" for="queueStatus">Queue status</label>
+                  <select id="queueStatus" aria-label="Queue status"><option value="PENDING_ADMIN_REVIEW">Pending review</option><option value="NEEDS_REVISION">Needs revision</option><option value="APPROVED">Approved</option><option value="REJECTED">Rejected</option></select>
+                </div>
+                <div id="adminSubmissionList" class="admin-submission-list"></div>
+              </section>
+              <section id="reviewPanel" class="card review-card"><div class="empty-state"><span class="empty-icon">↖</span><h3>Select a submission</h3><p>Its details and review form will appear here.</p></div></section>
+            </div>
+          </section>
+        </section>
+      </main>
+      <footer class="site-footer"><span>MediScope</span><span>Educational information grounded in reviewed sources.</span></footer>
+    </div>
+  </body>
+</html>

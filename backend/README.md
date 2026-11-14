@@ -16,7 +16,7 @@ Set-Location .\backend
 python -m uvicorn mediscope_api.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Open `http://127.0.0.1:8000/docs` for the interactive API page. This development server is bound to the local computer. Authentication is required for question and document-submission requests. The API is still a local development service; keep it bound to 127.0.0.1 for now.
+Open `http://127.0.0.1:8000/` for the MediScope browser interface, or `http://127.0.0.1:8000/docs` for the interactive API page. The plain HTML/CSS/JavaScript frontend lives in `frontend/` and is served by FastAPI from the same origin. It needs no Node.js or npm setup. This development server is bound to the local computer. Authentication is required for question and document-submission requests. The API is still a local development service; keep it bound to 127.0.0.1 for now.
 
 ## Routes
 
